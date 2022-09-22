@@ -2,12 +2,14 @@
 
 export const backendRoot = 'http://localhost:8000/'
 
-export const verifyTokenPath = 'accounts/token/verify/'
+export const verifyToken = 'accounts/token/verify/'
 
-export const getTokenPath = 'accounts/token/'
+export const accessToken = 'accounts/token/'
 
-export const getRefreshpth = 'accounts/token/refresh/'
+export const refreshToken = 'accounts/token/refresh/'
 
 export const userRegister = 'user/register/'
 
 export const fetchItems = 'api/listitems/'
+
+export const getUsername = 'user/name/'

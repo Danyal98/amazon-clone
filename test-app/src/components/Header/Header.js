@@ -1,10 +1,24 @@
-import React from 'react';
 import './Header.css';
-import { Link } from 'react-router-dom'
+import manager from '../../helpers/manager';
+import React, { useState, useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
+import { Link, useNavigate } from 'react-router-dom';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
 function Header() {
+    const navigate = useNavigate();
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        manager.getUserName(setUsername);
+    }, [])
+
+    const handleLogout = () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        navigate('/login')
+    }
+
     return (
         <div className="header">
             <Link to='/'>
@@ -17,10 +31,10 @@ function Header() {
             <div className="header_nav">
                 <div className="header_option">
                     <span className="header_option_lineOne">
-                        Hello User
+                        Hello
                     </span>
                     <span className="header_option_lineTwo">
-                        Sign In
+                        {username}
                     </span>
                 </div>
                 <div className="header_option">
@@ -45,8 +59,11 @@ function Header() {
                         <span className='header_option_lineTwo header_basketCount'>0</span>
                     </div>
                 </Link>
+                <div className='logout' style={{ color: 'white', 'padding-right': '10px' }} onClick={handleLogout}>
+                    Logout
+                </div>
             </div>
-        </div>
+        </div >
     )
 }
 

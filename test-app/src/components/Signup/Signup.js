@@ -3,16 +3,15 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import axiosInstance from '../../axios';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
+import { userRegister } from '../../backendInfo';
 import CustomSnackbar from '../Snackbar/Snackbar';
 import Typography from '@mui/material/Typography';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import CircularProgress from '@mui/material/CircularProgress';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function Copyright(props) {
@@ -32,64 +31,81 @@ const theme = createTheme();
 
 export default function SignUp() {
 
-    const navigate = useNavigate();
+    const initialFormData = Object.freeze({
+        first_name: '',
+        last_name: '',
+        username: '',
+        email: '',
+        password: '',
+        confirm_password: ''
+    })
+
+    const navigate = useNavigate()
     const [message, setMessage] = useState(null);
     const [loading, setLoading] = useState(false);
-
-    // const verifyLogin = () => {
-
-    //     localStorage.getItem('access_token') ? navigate('/') : navigate('/signup')
-    // }
-
-    // useEffect(() => {
-    //     verifyLogin()
-    // }, [])
-
+    const [passwordMatched, setPasswordMatched] = useState(false);
+    const [formData, updateFormData] = useState(initialFormData)
     const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
     const validEmail = new RegExp("^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$");
 
+    const handleChange = (e) => {
+        updateFormData({
+            ...formData,
+            [e.target.name]: e.target.value.trim(),
+        })
+    }
+
+    const checkPasswordMatch = () => {
+        formData.password === formData.confirm_password ? setPasswordMatched(true) : setPasswordMatched(false)
+    }
+
+    const verifyLogin = () => {
+        const access = localStorage.getItem('access_token')
+        access ? navigate('/') : navigate('/signup')
+    }
+
+    useEffect(() => { verifyLogin() }, [])
+    useEffect(() => { checkPasswordMatch() }, [formData.password, formData.confirm_password])
+
     const handleSubmit = (e) => {
+        console.log('event: ', e)
         e.preventDefault();
-        const first_name = e.target[0].value;
-        const last_name = e.target[2].value;
-        const username = e.target[4].value;
-        const email = e.target[6].value;
-        const password = e.target[8].value;
 
-        const data = { first_name, last_name, username, email, password }
+        console.log('formData: ', formData)
 
-        console.log('data: ', data)
-
-        if (!data.email) {
-            setMessage("Email cannot be Empty")
-        }
-        else if (!data.username) {
-            setMessage("Username cannot be Empty")
-        }
-        else if (!data.password) {
-            setMessage("Password cannot be Empty")
-        }
-        else if (!data.first_name) {
+        if (!formData.first_name) {
             setMessage("First name cannot be Empty")
         }
-        else if (!data.last_name) {
+        else if (!formData.last_name) {
             setMessage("Last cannot be Empty")
         }
-        else if (!validEmail.test(data.email)) {
+        else if (!formData.username) {
+            setMessage("Username cannot be Empty")
+        }
+        else if (!formData.email) {
+            setMessage("Email cannot be Empty")
+        }
+        else if (!formData.password) {
+            setMessage("Password cannot be Empty")
+        }
+        else if (!validEmail.test(formData.email)) {
             setMessage("Invalid email")
         }
-        else if (!strongRegex.test(data.password)) {
+        else if (!strongRegex.test(formData.password)) {
             setMessage('Invalid Password')
+        }
+        else if (!passwordMatched) {
+            setMessage('Passwords do not match')
         }
         else {
             setLoading(true);
             axiosInstance
-                .post(`user/register/`, {
-                    email: data.email,
-                    user_name: data.username,
-                    password: data.password,
-                    first_name: data.first_name,
-                    last_name: data.last_name,
+                .post(`${userRegister}`, {
+                    email: formData.email,
+                    user_name: formData.username,
+                    password: formData.password,
+                    first_name: formData.first_name,
+                    last_name: formData.last_name,
                 })
                 .then((res) => {
                     console.log(res);
@@ -135,12 +151,11 @@ export default function SignUp() {
                             alignItems: 'center',
                         }}
                     >
-                        <Avatar sx={{ mt: -5, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Sign up
-                        </Typography>
+                        <Box sx={{ height: '10vh', marginTop: '-6vh' }} >
+                            <Typography component="h1" variant="h3" style={{ 'width': '385px', "letterSpacing": 0, "fontWeight": "400", "lineHeight": "1.15" }}>
+                                AMAZON CLONE</Typography>
+                            <hr style={{ 'marginTop': 0 }} />
+                        </Box>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
@@ -150,8 +165,9 @@ export default function SignUp() {
                                         fullWidth
                                         id="firstName"
                                         label="First Name"
-                                        name="firstname"
+                                        name="first_name"
                                         autoFocus
+                                        onChange={handleChange}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -160,8 +176,9 @@ export default function SignUp() {
                                         fullWidth
                                         id="lastName"
                                         label="Last Name"
-                                        name="lastname"
+                                        name="last_name"
                                         autoComplete="family-name"
+                                        onChange={handleChange}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -172,6 +189,7 @@ export default function SignUp() {
                                         label="Username"
                                         name="username"
                                         autoComplete="username"
+                                        onChange={handleChange}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -182,6 +200,7 @@ export default function SignUp() {
                                         label="Email Address"
                                         name="email"
                                         autoComplete="email"
+                                        onChange={handleChange}
                                     />
                                 </Grid>
                                 <Typography
@@ -212,18 +231,33 @@ export default function SignUp() {
                                         type="password"
                                         id="password"
                                         autoComplete="new-password"
+                                        onChange={handleChange}
                                     />
                                 </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        name="confirm_password"
+                                        label="Confirm Password"
+                                        type="password"
+                                        id="confirm_password"
+                                        autoComplete="confirm_password"
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+                                <span style={{ padding: "5mm" }}>
+                                    {formData.password ? formData.confirm_password ? passwordMatched ? <span style={{ color: 'green' }}>Password matched</span> : <span style={{ color: 'red' }}>Password not matched</span> : '' : ''}
+                                </span>
                             </Grid>
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2, height: '7vh' }}
+                                sx={{ mt: 1, mb: 2, height: '7vh' }}
                             >
-                                Sign Up
                                 <span >
-                                    {loading && <CircularProgress size={20} sx={{ color: 'white', mt: '1vh', ml: '2vh' }} />}
+                                    {loading ? <CircularProgress size={20} sx={{ color: 'white', mt: '1vh', ml: '2vh' }} /> : <span>Sign Up</span>}
                                 </span>
                             </Button>
                             <Grid container justifyContent="flex-end">
@@ -233,7 +267,7 @@ export default function SignUp() {
                                     </Link>
                                 </Grid>
                             </Grid>
-                            <Copyright sx={{ mt: 2 }} />
+                            <Copyright sx={{ mt: 3 }} />
                         </Box>
                     </Box>
                 </Grid>

@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import axiosInstance from '../../axios';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
+import loginbg from '../../images/Amazon-bg.webp';
+import CustomSnackbar from '../Snackbar/Snackbar';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import loginbg from '../../images/Amazon-bg.webp'
-// import { useNavigate } from 'react-router-dom';
-// import { getTokenPath } from '../../backendInfo';
-// import axios from 'axios';
-// import Cookies from 'js-cookie';
-import { backendRoot } from '../../backendInfo'
+import React, { useState, useEffect } from 'react';
+import GoogleIcon from '@mui/icons-material/Google';
+import CssBaseline from '@mui/material/CssBaseline';
+import { backendRoot, accessToken } from '../../backendInfo';
 import CircularProgress from '@mui/material/CircularProgress';
 import MicrosoftIcon from '../../images/icons8-microsoft-50.png';
-import GoogleIcon from '@mui/icons-material/Google';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 const theme = createTheme();
@@ -35,16 +34,49 @@ function Copyright(props) {
 }
 
 export default function Login() {
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
 
-    const handleClick = event => {
-        setLoading(true)
-        setError(null)
-    };
+    const navigate = useNavigate();
+    const [message, setMessage] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = event => {
+    const verifyLogin = () => {
+        const access = localStorage.getItem('access_token')
+        access ? navigate('/') : navigate('/login')
+    }
 
+    useEffect(() => { verifyLogin() }, [])
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const email = e.target[0].value
+        const password = e.target[2].value
+        const data = { email, password }
+
+        if (!data.email) {
+            setMessage("Email cannot be Empty")
+        }
+        else if (!data.password) {
+            setMessage("Password cannot be Empty")
+        }
+        else {
+            setLoading(true)
+            axiosInstance
+                .post(`${accessToken}`, {
+                    email: data.email,
+                    password: data.password,
+                })
+                .then((res) => {
+                    localStorage.setItem('access_token', res.data.access);
+                    localStorage.setItem('refresh_token', res.data.refresh);
+                    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+                    setLoading(false)
+                    navigate('/');
+                })
+                .catch((err) => {
+                    setLoading(false)
+                    setMessage("Incorrect email or password")
+                })
+        }
     };
 
     return (
@@ -107,9 +139,8 @@ export default function Login() {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2, height: '7vh' }}
                             >
-                                Sign In
                                 <span >
-                                    {loading && <CircularProgress size={25} sx={{ color: 'white', mt: '1vh', ml: '2vh' }} />}
+                                    {loading ? <CircularProgress size={25} sx={{ color: 'white', mt: '1vh', ml: '2vh' }} /> : <span>Sign In</span>}
                                 </span>
                             </Button>
                             <Grid container>
@@ -121,7 +152,8 @@ export default function Login() {
                             </Grid>
 
                             <div style={{ marginTop: '3vh', height: '19vh', display: 'flex', flexDirection: 'column', width: '100%', 'alignItems': 'center' }}>
-                                <span onClick={handleClick}>
+                                {/* <span onClick={handleClick}> */}
+                                <span>
 
                                     <Button
                                         type="submit"
@@ -136,7 +168,8 @@ export default function Login() {
                                         </>
                                     </Button>
                                 </span>
-                                <span onClick={handleClick}>
+                                {/* <span onClick={handleClick}> */}
+                                <span>
                                     <Button
                                         type="submit"
                                         fullWidth
@@ -151,16 +184,15 @@ export default function Login() {
                                         </>
                                     </Button>
                                 </span>
-                                <span style={{ display: 'block', width: 'fit-content', margin: 'auto', height: '5vh' }}>
-                                    {loading && <CircularProgress size={25} />}
-                                    {error ? <Typography sx={{ color: 'red', 'fontSize': '0.9rem' }} >{error}</Typography> : null}
-                                </span>
                             </div>
                             <Copyright />
                         </Box>
                     </Box>
                 </Grid>
             </Grid>
+            <CustomSnackbar
+                message={message}
+                setMessage={setMessage} />
         </ThemeProvider>
     );
 }

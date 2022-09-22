@@ -1,10 +1,10 @@
 import './Home.css'
 import Header from '../Header/Header';
+import Product from '../Product/Product';
 import manager from '../../helpers/manager'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Carousel from 'react-bootstrap/Carousel';
 import React, { useState, useEffect } from 'react';
-import Product from '../Product/Product';
 
 function Home() {
     const [items, setItems] = useState([]);
