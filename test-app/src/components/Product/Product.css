@@ -1,0 +1,29 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    /* z-index: 1; */
+    align-items: center;
+    margin-left: 23px;
+    margin-bottom: 20px;
+    padding: 20px;
+    /* width: 25%; */
+    position: relative;
+    min-width: 30vh;
+}
+
+.card_media {
+    max-height: 200px;
+    width: 100%;
+    object-fit: contain;
+    margin-bottom: 15px;
+
+}
+
+.add_to_basket {
+    background: #f0c14b;
+    border: 1px solid;
+    margin-top: 10px;
+    border-color: #a88734 #9c7e31 #846a29;
+    color: #111;
+}
