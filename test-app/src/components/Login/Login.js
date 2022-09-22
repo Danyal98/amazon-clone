@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
+import Cookie from 'universal-cookie';
 import axiosInstance from '../../axios';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -35,16 +36,23 @@ function Copyright(props) {
 
 export default function Login() {
 
+    const cookie = new Cookie();
+
     const navigate = useNavigate();
     const [message, setMessage] = useState(null);
     const [loading, setLoading] = useState(false);
+    console.log(cookie.get('access_token'))
 
     const verifyLogin = () => {
-        const access = localStorage.getItem('access_token')
+        const access = cookie.get('access_token')
         access ? navigate('/') : navigate('/login')
     }
 
     useEffect(() => { verifyLogin() }, [])
+
+    const handleClick = () => {
+        setMessage("Logging In through Social Logins")
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -66,9 +74,9 @@ export default function Login() {
                     password: data.password,
                 })
                 .then((res) => {
-                    localStorage.setItem('access_token', res.data.access);
-                    localStorage.setItem('refresh_token', res.data.refresh);
-                    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+                    cookie.set('access_token', res.data.access)
+                    cookie.set('refresh_token', res.data.refresh)
+                    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookie.get('access_token', false);
                     setLoading(false)
                     navigate('/');
                 })
@@ -152,15 +160,13 @@ export default function Login() {
                             </Grid>
 
                             <div style={{ marginTop: '3vh', height: '19vh', display: 'flex', flexDirection: 'column', width: '100%', 'alignItems': 'center' }}>
-                                {/* <span onClick={handleClick}> */}
-                                <span>
-
+                                <span onClick={handleClick}>
                                     <Button
                                         type="submit"
                                         fullWidth
                                         variant="contained"
                                         sx={{ mb: 2, height: '40px', width: '260px', backgroundColor: "#db4437", fontSize: "0.77rem", "&:hover": { backgroundColor: "#ae2519" } }}
-                                        href={`${backendRoot}/accounts/google/login/?process=login`}
+                                        href={`${backendRoot}accounts/google/login/?process=login`}
                                     >
                                         <>
                                             <GoogleIcon style={{ width: '25px', marginRight: '8px', marginLeft: '-6px' }} />
@@ -168,15 +174,14 @@ export default function Login() {
                                         </>
                                     </Button>
                                 </span>
-                                {/* <span onClick={handleClick}> */}
-                                <span>
+                                <span onClick={handleClick}>
                                     <Button
                                         type="submit"
                                         fullWidth
                                         variant="contained"
                                         sx={{ height: '40px', width: '260px', fontSize: '0.69rem', backgroundColor: "#00a4ef", "&:hover": { backgroundColor: "#0078ef" } }}
                                         color="error"
-                                        href={`${backendRoot}/accounts/microsoft/login/`}
+                                        href={`${backendRoot}accounts/microsoft/login/`}
                                     >
                                         <>
                                             <img style={{ width: '25px', marginRight: '9px' }} src={MicrosoftIcon} />

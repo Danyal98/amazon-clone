@@ -1,4 +1,5 @@
 import './Header.css';
+import Cookie from 'universal-cookie';
 import manager from '../../helpers/manager';
 import React, { useState, useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,14 +9,16 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 function Header() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
+    const cookie = new Cookie();
 
     useEffect(() => {
         manager.getUserName(setUsername);
     }, [])
 
     const handleLogout = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+
+        cookie.remove('access_token');
+        cookie.remove('refresh_token');
         navigate('/login')
     }
 
@@ -59,7 +62,7 @@ function Header() {
                         <span className='header_option_lineTwo header_basketCount'>0</span>
                     </div>
                 </Link>
-                <div className='logout' style={{ color: 'white', 'padding-right': '10px' }} onClick={handleLogout}>
+                <div className='logout' style={{ color: 'white', paddingRight: '10px' }} onClick={handleLogout}>
                     Logout
                 </div>
             </div>

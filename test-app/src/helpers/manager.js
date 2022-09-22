@@ -1,3 +1,4 @@
+import Cookie from 'universal-cookie';
 import { backendRoot, fetchItems, getUsername } from '../backendInfo'
 
 const manager = {
@@ -19,10 +20,11 @@ const manager = {
     },
 
     getUserName: (setUsername) => {
+        const cookie = new Cookie();
         fetch(`${backendRoot}` + `${getUsername}`, {
             method: "GET",
             headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+                Authorization: 'Bearer ' + cookie.get('access_token'),
                 "Content-Type": "application/json",
             },
         })

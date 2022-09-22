@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
+import Cookies from 'universal-cookie';
 import Paper from '@mui/material/Paper';
 import axiosInstance from '../../axios';
 import Button from '@mui/material/Button';
@@ -31,6 +32,8 @@ const theme = createTheme();
 
 export default function SignUp() {
 
+    const cookie = new Cookies()
+
     const initialFormData = Object.freeze({
         first_name: '',
         last_name: '',
@@ -60,7 +63,7 @@ export default function SignUp() {
     }
 
     const verifyLogin = () => {
-        const access = localStorage.getItem('access_token')
+        const access = cookie.get('access_token', false)
         access ? navigate('/') : navigate('/signup')
     }
 
@@ -102,7 +105,7 @@ export default function SignUp() {
             axiosInstance
                 .post(`${userRegister}`, {
                     email: formData.email,
-                    user_name: formData.username,
+                    username: formData.username,
                     password: formData.password,
                     first_name: formData.first_name,
                     last_name: formData.last_name,
