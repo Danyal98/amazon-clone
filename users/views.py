@@ -11,8 +11,7 @@ class CustomUserCreate(APIView):
     def post(self, request):
         reg_serializer = RegisterUserSerializer(data=request.data)
         if reg_serializer.is_valid():
-            newuser = reg_serializer.save()
-            if newuser:
+            if newuser := reg_serializer.save():
                 return Response(status=status.HTTP_201_CREATED)
         return Response(reg_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

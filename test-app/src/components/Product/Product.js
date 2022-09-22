@@ -29,14 +29,14 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export default function Product(props) {
     const [expanded, setExpanded] = useState(false);
-    const [value, setValue] = useState(props.item.rating);
+    const [value, setValue] = useState(parseInt(props.item.rating, 10));
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
     return (
-        <Card className='card' key={props.item.id} sx={{ width: '31%' }}>
+        <Card className='card' key={props.item.id} sx={{ width: '31%', borderRadius: '0px' }}>
             <CardHeader
                 sx={{ width: "100%" }}
                 title={props.item.name}

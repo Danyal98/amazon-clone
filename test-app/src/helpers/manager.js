@@ -1,8 +1,8 @@
-import { backendRoot } from '../backendInfo'
+import { backendRoot, fetchItems } from '../backendInfo'
 
 const manager = {
     getItems: (setItems) => {
-        fetch(backendRoot + `/api/listitems/`, {
+        fetch(`${backendRoot}` + `${fetchItems}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
