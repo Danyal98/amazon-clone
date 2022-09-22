@@ -63,6 +63,11 @@ INSTALLED_APPS = [
     "api",
     "accounts",
     "users",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.microsoft',
 ]
 
 MIDDLEWARE = [
@@ -201,4 +206,33 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000000000
+
+# # Authentication
+LOGIN_REDIRECT_URL = 'accounts_urls:login_redirect'
+
+LOGIN_URL = 'accounts_urls:login_redirect'
+
+# allauth settings
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+# prevent reentring email onsite
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+SITE_ID = 1
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+FRONTEND_ROOT_URL = '/'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'microsoft': {
+        'TENANT': 'common',
+    }
 }

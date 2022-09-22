@@ -8,12 +8,12 @@ from django.db import models
 
 class UserAdminConfig(UserAdmin):
     model = NewUser
-    search_fields = ('email', 'user_name', 'first_name', 'last_name')
-    list_filter = ('email', 'user_name', 'first_name', 'is_active', 'is_staff')
-    ordering = ('user_name',)
-    list_display = ('email', 'id', 'user_name', 'first_name', 'last_name','is_active', 'is_staff')
+    search_fields = ('email', 'username', 'first_name', 'last_name')
+    list_filter = ('email', 'username', 'first_name', 'is_active', 'is_staff')
+    ordering = ('username',)
+    list_display = ('email', 'id', 'username', 'first_name', 'last_name','is_active', 'is_staff')
     fieldsets = (
-        (None, {'fields':('email', 'user_name', 'first_name', 'last_name')}),
+        (None, {'fields':('email', 'username', 'first_name', 'last_name')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
         ('Personal', {'fields': ('about',)}),
     )
@@ -24,7 +24,7 @@ class UserAdminConfig(UserAdmin):
         (
             None, {
                 'classes': ('wide',),
-                'fields': ('email', 'user_name', 'first_name', 'last_name','password1', 'password2', 'is_active', 'is_staff')
+                'fields': ('email', 'username', 'first_name', 'last_name','password1', 'password2', 'is_active', 'is_staff')
             }
         )
     )
