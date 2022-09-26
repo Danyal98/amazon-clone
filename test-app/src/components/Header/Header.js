@@ -3,13 +3,15 @@ import Cookie from 'universal-cookie';
 import manager from '../../helpers/manager';
 import React, { useState, useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
+import { useStateValue } from '../../StateProvider';
 import { Link, useNavigate } from 'react-router-dom';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
 function Header() {
+    const cookie = new Cookie();
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
-    const cookie = new Cookie();
+    const [{ basket }, dispatch] = useStateValue();
 
     useEffect(() => {
         manager.getUserName(setUsername);
@@ -59,7 +61,7 @@ function Header() {
                 <Link to='/checkout'>
                     <div className="header_optionBasket">
                         <ShoppingBasketIcon />
-                        <span className='header_option_lineTwo header_basketCount'>0</span>
+                        <span className='header_option_lineTwo header_basketCount'>{basket.length}</span>
                     </div>
                 </Link>
                 <div className='logout' style={{ color: 'white', paddingRight: '10px' }} onClick={handleLogout}>

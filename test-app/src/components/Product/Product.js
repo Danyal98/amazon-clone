@@ -8,6 +8,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
+import { useStateValue } from '../../StateProvider';
 import CardActions from '@mui/material/CardActions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
@@ -29,11 +30,31 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export default function Product(props) {
     const [expanded, setExpanded] = useState(false);
+    const [{ basket }, dispatch] = useStateValue();
     const [value, setValue] = useState(parseInt(props.item.rating, 10));
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    console.log('This is Basket: ', basket)
+
+    const addToBasket = () => {
+        // dispatch items into the data layer
+        dispatch({
+            type: "ADD_TO_BASKET",
+            item: {
+                id: props.item.id,
+                creation_date: props.item.creation_date,
+                title: props.item.name,
+                image: props.item.image,
+                price: props.item.price,
+                rating: props.item.rating,
+                description: props.item.description,
+            }
+        })
+
+    }
 
     return (
         <Card className='card' key={props.item.id} sx={{ width: '31%', borderRadius: '0px' }}>
@@ -64,7 +85,7 @@ export default function Product(props) {
                 </Typography>
             </CardContent>
             <button
-                className='add_to_basket'>
+                className='add_to_basket' onClick={addToBasket}>
                 Add to Basket
             </button>
             <CardActions disableSpacing>
