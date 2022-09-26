@@ -61,7 +61,7 @@ function Header() {
                 <Link to='/checkout'>
                     <div className="header_optionBasket">
                         <ShoppingBasketIcon />
-                        <span className='header_option_lineTwo header_basketCount'>{basket.length}</span>
+                        <span className='header_option_lineTwo header_basketCount'>{basket?.length}</span>
                     </div>
                 </Link>
                 <div className='logout' style={{ color: 'white', paddingRight: '10px' }} onClick={handleLogout}>
