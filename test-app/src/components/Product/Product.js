@@ -5,6 +5,7 @@ import Rating from '@mui/material/Rating';
 import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
 import CardMedia from '@mui/material/CardMedia';
+import StarIcon from '@mui/icons-material/Star';
 import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -29,15 +30,12 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 export default function Product(props) {
-    const [expanded, setExpanded] = useState(false);
     const [{ basket }, dispatch] = useStateValue();
-    const [value, setValue] = useState(parseInt(props.item.rating, 10));
+    const [expanded, setExpanded] = useState(false);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-
-    console.log('This is Basket: ', basket)
 
     const addToBasket = () => {
         // dispatch items into the data layer
@@ -73,21 +71,43 @@ export default function Product(props) {
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
                     <Rating
-                        name="simple-controlled"
-                        value={value}
-                        onChange={(event, newValue) => {
-                            setValue(newValue);
-                        }}
+                        name="read-only"
+                        value={parseFloat(props.item.rating)}
+                        readOnly
+                        precision={0.1}
+                        emptyIcon={<StarIcon fontSize="inherit" />}
                     />
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     <strong>Price: $</strong>{props.item.price}
                 </Typography>
+                {props.item.quantity > 0 ?
+                    <Typography variant="body2" color="text.secondary">
+                        <strong style={{ color: 'green' }}>In Stock: </strong>{props.item.quantity}
+                    </Typography> :
+                    <Typography variant="body2" color="text.secondary">
+                        <strong style={{ color: 'red' }}>Out of Stock</strong>
+                    </Typography>
+                }
             </CardContent>
-            <button
-                className='add_to_basket' onClick={addToBasket}>
-                Add to Basket
-            </button>
+            {props.item.quantity > 0 ?
+                <button
+                    className='add_to_basket' onClick={addToBasket}>
+                    Add to Basket
+                </button> :
+                <>
+                    <Typography variant="body2" color="text.secondary">
+                        <strong>(This item will soon be added in inventory.)</strong>
+                    </Typography>
+                    <button
+                        disabled
+                        style={{ textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}
+
+                        className='add_to_basket' onClick={addToBasket}>
+                        Add to Basket
+                    </button>
+                </>
+            }
             <CardActions disableSpacing>
                 <ExpandMore
                     expand={expanded}

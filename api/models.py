@@ -11,6 +11,7 @@ class Items(models.Model):
     creation_date = models.DateField(auto_now_add=True, auto_now=False, blank=False)
     rating = models.DecimalField(decimal_places=2, max_digits=5)
     price = models.DecimalField(decimal_places=2, max_digits=12)
+    quantity = models.IntegerField(null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     def __str__(self):
         return self.name
