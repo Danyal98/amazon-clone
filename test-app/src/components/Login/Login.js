@@ -37,7 +37,6 @@ function Copyright(props) {
 export default function Login() {
 
     const cookie = new Cookie();
-
     const navigate = useNavigate();
     const [message, setMessage] = useState(null);
     const [loading, setLoading] = useState(false);

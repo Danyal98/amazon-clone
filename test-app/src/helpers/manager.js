@@ -14,7 +14,6 @@ const manager = {
                 else console.log("An Error Occured");
             })
             .then((data) => {
-                console.log("DEBUG :GET ITEMS FROM API", data);
                 setItems(data)
             })
     },
@@ -33,7 +32,6 @@ const manager = {
                 else console.log("An Error Occured");
             })
             .then((data) => {
-                console.log("DEBUG :LOGGED IN USER", data);
                 setUsername(data)
             })
     },

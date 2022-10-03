@@ -11,14 +11,13 @@ function Header() {
     const cookie = new Cookie();
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
-    const [{ basket }, dispatch] = useStateValue();
+    const [{ basket },] = useStateValue();
 
     useEffect(() => {
         manager.getUserName(setUsername);
     }, [])
 
     const handleLogout = () => {
-
         cookie.remove('access_token');
         cookie.remove('refresh_token');
         navigate('/login')

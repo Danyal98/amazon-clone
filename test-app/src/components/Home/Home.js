@@ -1,4 +1,5 @@
 import './Home.css'
+import { ReactFragment } from 'react';
 import Header from '../Header/Header';
 import Product from '../Product/Product';
 import manager from '../../helpers/manager'

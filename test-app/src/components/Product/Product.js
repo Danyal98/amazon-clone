@@ -30,7 +30,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 export default function Product(props) {
-    const [{ basket }, dispatch] = useStateValue();
+    const [, dispatch] = useStateValue();
     const [expanded, setExpanded] = useState(false);
 
     const handleExpandClick = () => {

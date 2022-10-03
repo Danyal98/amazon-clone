@@ -1,4 +1,4 @@
-// export const backendRoot = 'https://document-ms-361112.nw.r.appspot.com'
+// export const backendRoot = 'https://amazon-danyal-dot-cloud-work-314310.ew.r.appspot.com/'
 
 export const backendRoot = 'http://localhost:8000/'
 
