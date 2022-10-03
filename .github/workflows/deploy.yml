@@ -40,7 +40,7 @@ jobs:
       uses: actions/setup-node@v2
     - name: Building frontend
       run: |
-         cd frontend
+         cd test-app
          npm install 
          CI= npm run build
     - name: Setup python 3.8
