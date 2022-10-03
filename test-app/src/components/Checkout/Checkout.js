@@ -21,8 +21,7 @@ export default function Checkout() {
                         className='checkout_ad'
                         src="https://images-na.ssl-images-amazon.com/images/G/02/UK_CCMP/TM/OCC_Amazon1._CB423492668_.jpg" alt="" />
                     <div className="checkout_title">
-                        <h3>{username}</h3>
-                        <h2>Your shopping basket</h2>
+                        <h3>{username}'s shopping basket</h3>
                     </div>
                     {basket.map((item) => {
                         return <CheckoutProducts item={item} />
