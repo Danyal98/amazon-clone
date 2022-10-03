@@ -41,7 +41,7 @@ jobs:
     - name: Building frontend
       run: |
          cd test-app
-         npm install 
+         npm install --force
          CI= npm run build
     - name: Setup python 3.8
       uses: actions/setup-python@v2
