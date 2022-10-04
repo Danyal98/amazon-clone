@@ -15,3 +15,26 @@ class listItems(APIView):
         items = Items.objects.all()
         serializer = ItemsSerializer(items, many=True)
         return Response(serializer.data)
+
+class add_to_basket(APIView):
+    # permission_classes = (IsAuthenticated)
+
+    def post(self, request, pk):
+        item = Items.objects.get(id=pk)
+        print("item", item)
+        print("data", request.data)
+        serializer = ItemsSerializer(instance=item, data=request.data)
+        print(serializer)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+class remove_from_basket(APIView):
+    # permission_classes = (IsAuthenticated)
+
+    def post(self, request, pk):
+        item = Items.objects.get(id=pk)
+        serializer = ItemsSerializer(instance=item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)

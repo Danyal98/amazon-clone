@@ -1,17 +1,14 @@
 import './Checkout.css'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useApp } from '../../AppContext'
 import Header from '../Header/Header'
-import manager from '../../helpers/manager'
 import Subtotal from '../Subtotal/Subtotal'
 import { useStateValue } from '../../StateProvider'
 import CheckoutProducts from '../CheckoutProducts/CheckoutProducts'
 
 export default function Checkout() {
-    const [username, setUserName] = useState(null);
     const [{ basket },] = useStateValue();
-    useEffect(() => {
-        manager.getUserName(setUserName)
-    }, [])
+    const ceo = useApp()
     return (
         <React.Fragment>
             <Header />
@@ -21,7 +18,7 @@ export default function Checkout() {
                         className='checkout_ad'
                         src="https://images-na.ssl-images-amazon.com/images/G/02/UK_CCMP/TM/OCC_Amazon1._CB423492668_.jpg" alt="" />
                     <div className="checkout_title">
-                        <h3>{username}'s shopping basket</h3>
+                        <h3>{ceo.state.user}'s shopping basket</h3>
                     </div>
                     {basket.map((item) => {
                         return <CheckoutProducts item={item} />

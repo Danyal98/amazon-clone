@@ -1,7 +1,9 @@
 import './Product.css'
 import Card from '@mui/material/Card';
+import { useApp } from '../../AppContext'
 import React, { useState } from 'react';
 import Rating from '@mui/material/Rating';
+import manager from '../../helpers/manager';
 import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
 import CardMedia from '@mui/material/CardMedia';
@@ -30,6 +32,8 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 export default function Product(props) {
+    const ceo = useApp()
+    const [inInventory, setInInventory] = useState(parseInt(props.item.quantity, 10))
     const [, dispatch] = useStateValue();
     const [expanded, setExpanded] = useState(false);
 
@@ -37,8 +41,23 @@ export default function Product(props) {
         setExpanded(!expanded);
     };
 
-    const addToBasket = () => {
+    const addToBasket = (item) => {
+        console.log('ITEM: ', item)
+        let formData = new FormData()
+        formData.append("id", parseInt(item.id))
+        formData.append("name", item.name)
+        formData.append("description", item.description)
+        formData.append("image", item.image)
+        formData.append("price", parseFloat(item.price))
+        formData.append("rating", parseFloat(item.rating))
+        formData.append("quantity", parseInt(item.quantity, 10) - 1)
+
+        manager.add_to_basket(
+            formData,
+            ceo.actions.setItems
+        )
         // dispatch items into the data layer
+        setInInventory(inInventory - 1)
         dispatch({
             type: "ADD_TO_BASKET",
             item: {
@@ -81,18 +100,18 @@ export default function Product(props) {
                 <Typography variant="body2" color="text.secondary">
                     <strong>Price: $</strong>{props.item.price}
                 </Typography>
-                {props.item.quantity > 0 ?
+                {inInventory > 0 ?
                     <Typography variant="body2" color="text.secondary">
-                        <strong style={{ color: 'green' }}>In Stock: </strong>{props.item.quantity}
+                        <strong style={{ color: 'green' }}>In Stock: </strong>{inInventory}
                     </Typography> :
                     <Typography variant="body2" color="text.secondary">
                         <strong style={{ color: 'red' }}>Out of Stock</strong>
                     </Typography>
                 }
             </CardContent>
-            {props.item.quantity > 0 ?
+            {inInventory > 0 ?
                 <button
-                    className='add_to_basket' onClick={addToBasket}>
+                    className='add_to_basket' onClick={() => addToBasket(props.item)}>
                     Add to Basket
                 </button> :
                 <>
@@ -103,7 +122,7 @@ export default function Product(props) {
                         disabled
                         style={{ textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}
 
-                        className='add_to_basket' onClick={addToBasket}>
+                        className='add_to_basket'>
                         Add to Basket
                     </button>
                 </>

@@ -13,13 +13,16 @@ const defaultProps = {
 
 function AppProvider(props) {
     const [items, setItems] = useState([]);
+    const [user, setUser] = useState();
 
     const state = {
         items,
+        user,
     }
 
     const actions = {
         setItems,
+        setUser,
     }
 
     return (

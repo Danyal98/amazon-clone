@@ -1,5 +1,6 @@
 import './Header.css';
 import Cookie from 'universal-cookie';
+import { useApp } from '../../AppContext';
 import manager from '../../helpers/manager';
 import React, { useState, useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,13 +9,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
 function Header() {
+    const ceo = useApp();
     const cookie = new Cookie();
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
     const [{ basket },] = useStateValue();
 
     useEffect(() => {
-        manager.getUserName(setUsername);
+        manager.getUserName(ceo.actions.setUser);
     }, [])
 
     const handleLogout = () => {
@@ -38,7 +39,7 @@ function Header() {
                         Hello
                     </span>
                     <span className="header_option_lineTwo">
-                        {username}
+                        {ceo.state.user}
                     </span>
                 </div>
                 <div className="header_option">

@@ -1,18 +1,19 @@
 import './Home.css'
-import { ReactFragment } from 'react';
 import Header from '../Header/Header';
+import React, { useEffect } from 'react';
 import Product from '../Product/Product';
+import { useApp } from '../../AppContext';
 import manager from '../../helpers/manager'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Carousel from 'react-bootstrap/Carousel';
-import React, { useState, useEffect } from 'react';
 
 function Home() {
-    const [items, setItems] = useState([]);
+    const ceo = useApp()
 
     useEffect(() => {
-        manager.getItems(setItems)
+        manager.getItems(ceo.actions.setItems)
     }, [])
+
     return (
         <React.Fragment>
             <Header />
@@ -42,7 +43,7 @@ function Home() {
                         </Carousel.Item>
                     </Carousel>
                     <div className='home_row'>
-                        {items.map((item) => {
+                        {ceo.state.items.map((item) => {
                             return (
                                 <Product item={item} />
                             )

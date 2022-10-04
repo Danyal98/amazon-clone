@@ -13,3 +13,5 @@ export const userRegister = 'user/register/'
 export const fetchItems = 'api/listitems/'
 
 export const getUsername = 'user/name/'
+
+export const addToBasket = 'api/add-to-basket/'
